@@ -84,7 +84,7 @@ export function app(): express.Express {
         }
         const params = req.params[0];
         var seo: any = {
-          title: 'Healing Tube',
+          title: 'Reefer.social',
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
@@ -153,7 +153,7 @@ export function app(): express.Express {
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
-            name: post?.title || post?.albumname || 'Healing.Tube Post',
+            name: post?.title || post?.albumname || 'Reefer.social Post',
             description: pdhtml?.textContent || 'Post content',
             image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
           };
@@ -170,7 +170,7 @@ export function app(): express.Express {
 
           console.log('group===>', group);
           const talent = {
-            name: `HealingTube Research ${group?.PageTitle}`,
+            name: `Reefer.social Research ${group?.PageTitle}`,
             description: group?.PageDescription,
             image: group?.CoverPicName || group?.ProfilePicName
           };

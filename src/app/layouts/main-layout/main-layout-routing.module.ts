@@ -17,7 +17,8 @@ const routes: Routes = [
         }
       },
       {
-        path: 'health-practitioner',
+        path: 'dispensaries-wholesale',
+        // path: 'health-practitioner',
         loadChildren: () => import('./pages/communities/communities.module').then((m) => m.CommunitiesModule),
         data: {
           isShowLeftSideBar: true
