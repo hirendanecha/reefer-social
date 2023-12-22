@@ -69,7 +69,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       title: 'Reefer.social Registration',
       url: `${environment.webUrl}sign-up`,
       description: 'Registration page',
-      image: `${environment.webUrl}assets/images/landingpage/Healing-Tube-Logo.png`,
+      image: `${environment.webUrl}assets/images/landingpage/reefer-default-banner-and-logo.png`,
     };
     // this.seoService.updateSeoMetaData(data);
   }

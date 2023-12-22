@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       title: 'Reefer.social login',
       url: `${environment.webUrl}login`,
       description: 'login page',
-      image: `${environment.webUrl}assets/images/landingpage/Healing-Tube-Logo.png`,
+      image: `${environment.webUrl}assets/images/landingpage/reefer-default-banner-and-logo.png`,
     };
     // this.seoService.updateSeoMetaData(data);
   }
