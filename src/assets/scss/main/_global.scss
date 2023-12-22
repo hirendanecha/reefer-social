@@ -1113,3 +1113,8 @@ li {
   border-radius: 10px !important;
   background-color: var(--scroll-color) !important;
 }
+
+.form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
