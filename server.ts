@@ -84,17 +84,17 @@ export function app(): express.Express {
         }
         const params = req.params[0];
         var seo: any = {
-          title: 'Reefer.social',
+          title: 'Reefer Social',
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
-            'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
-          site: 'https://www.healing.tube/',
-          url: 'https://www.healing.tube' + params,
-          keywords: 'HealingTube',
+            'https://reefer.social/assets/images/profile-cover.png',
+          site: 'https://reefer.social/',
+          url: 'https://reefer.social' + params,
+          keywords: 'ReeferSocial',
         };
         if (
-          params.indexOf('communities/') > -1 ||
+          params.indexOf('dispensaries-wholesale/') > -1 ||
           params.indexOf('pages/') > -1
         ) {
           let id = params.split('/');
@@ -155,7 +155,7 @@ export function app(): express.Express {
           const talent = {
             name: post?.title || post?.albumname || 'Reefer.social Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
+            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://reefer.social/assets/images/profile-cover.png',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
