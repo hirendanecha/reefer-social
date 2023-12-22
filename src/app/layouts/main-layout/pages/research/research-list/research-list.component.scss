@@ -36,7 +36,7 @@
         opacity: 1;
   
         span {
-          background-color: var(--bs-primary);
+          background-color: var(--primary-color);
           border-radius: 10px;
           background-size: 18px;
           width: 32px;
@@ -118,4 +118,8 @@
       color: #a6acd1;
     }
   }
+}
+.form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
