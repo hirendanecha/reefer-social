@@ -41,6 +41,9 @@
       right: calc(23% + 70px) !important;
     }
   }
+  .custom-color{
+    color: var(--primary-color);
+  }
 }
 
 .notification-content {

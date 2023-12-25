@@ -58,6 +58,7 @@
     .btn:first-child:active,
     .btn.active,
     .btn.show {
+      background-color: var(--primary-color);
       color: white !important;
     }
   
