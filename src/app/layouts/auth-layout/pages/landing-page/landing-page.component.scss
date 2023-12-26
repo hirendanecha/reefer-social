@@ -2,16 +2,16 @@
   height: 100vh;
   width: 100vw;
   // background: #11134d;
+  .c-fonts {
+    font-size: min(max(14px, 1vw), 15px);
+    padding: 10px 0;
+  }
 
   .text-s {
-    font-size: min(max(16px, 1vw), 22px);
-  }
-  .c-fonts {
-    // font-size: min(max(25px, 2vw), 44px);
-    font-size: 22px;
-    
-    @media (max-width: 999px) {
-      font-size: 16px;
+    font-size: min(max(14px, 1vw), 15px);
+    padding: 10px 0;
+    @media (max-width: 485px) {
+      padding: 5px;
     }
   }
 
@@ -24,12 +24,16 @@
     min-height: 400px;
 
     .banner-text {
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       background-color: #0b0d0ed4;
       border-radius: 5px;
-      padding: 40px;
-      height: 300px;
+      padding: 20px 40px;
+      // height: 300px;
+
+      @media (max-width: 455px) {
+        padding: 20px;
+      }
     }
 
     @media (max-width: 600px) {
