@@ -88,7 +88,7 @@ export function app(): express.Express {
           description:
             'Social Reefer discussions with optional video conferencing. Dispensaries and Farmers promote cannabis products.',
           image:
-            'https://reefer.social/assets/images/profile-cover.png',
+            'https://reefer.social/assets/images/reefer-default-banner-and-logo-1.png',
           site: 'https://reefer.social/',
           url: 'https://reefer.social' + params,
           keywords: 'ReeferSocial',
@@ -155,7 +155,7 @@ export function app(): express.Express {
           const talent = {
             name: post?.title || post?.albumname || 'Reefer.social Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://reefer.social/assets/images/profile-cover.png',
+            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://reefer.social/assets/images/reefer-default-banner-and-logo-1.png',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
