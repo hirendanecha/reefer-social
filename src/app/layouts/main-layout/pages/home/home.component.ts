@@ -65,8 +65,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   buttonClicked = false;
   originalFavicon: HTMLLinkElement;
-  notificationSoundOct = ''
-  
+  notificationSoundOct = '';
+
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -124,15 +124,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
-        console.log('new-notification', data)
+        console.log('new-notification', data);
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
         if (data?.actionType === 'T') {
           var sound = new Howl({
-            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+            ],
           });
-          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
+          this.notificationSoundOct = localStorage?.getItem(
+            'notificationSoundEnabled'
+          );
           if (this.notificationSoundOct !== 'N') {
             if (sound) {
               sound?.play();
@@ -168,7 +172,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -324,12 +328,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.postData?.pdfUrl
     ) {
       if (!this.postData.meta.metalink) {
-        this.postData.metalink = null
-        this.postData.title = null
-        this.postData.metaimage = null
-        this.postData.metadescription = null
+        this.postData.metalink = null;
+        this.postData.title = null;
+        this.postData.metaimage = null;
+        this.postData.metadescription = null;
         console.log(this.postData);
-
       }
       // this.spinner.show();
       console.log(
@@ -394,7 +397,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editCommunity(data): void {
-    let modalRef: any
+    let modalRef: any;
     if (data.pageType === 'community') {
       modalRef = this.modalService.open(AddCommunityModalComponent, {
         centered: true,
@@ -502,9 +505,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
-                    ? 'dispensaries-wholesale'
-                    : 'pages'
+                  `${
+                    this.communityDetails.pageType === 'community'
+                      ? 'dispensaries-wholesale'
+                      : 'pages'
                   }`,
                 ]);
               }
@@ -599,7 +603,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               uint8Array[i] = binaryString.charCodeAt(i);
             }
             const blob = new Blob([uint8Array], { type: 'image/jpeg' });
-            const fileName = 'copyImage.jpg';
+            const fileName = `copyImage-${new Date().getTime()}.jpg`;
             const file = new File([blob], fileName, { type: 'image/jpeg' });
             this.postData.file = file;
           } catch (error) {
