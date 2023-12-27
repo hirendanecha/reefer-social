@@ -351,7 +351,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onTagUserInputChangeEvent(data: any): void {
     // this.postMessageInputValue = data?.html
-    this.postData.postdescription = data?.html;
+    this.extractImageUrlFromContent(data.html);
+    // this.postData.postdescription = data?.html;
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
   }
@@ -568,5 +569,50 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.openUploadVideoModal();
       }
     });
+  }
+
+  extractImageUrlFromContent(content: string): void {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        const copyImage = imgTag.getAttribute('src');
+        const bytes = copyImage.length;
+        const megabytes = bytes / (1024 * 1024);
+        if (megabytes > 1) {
+          this.postData['postdescription'] = content.replace(copyImage, '');
+          const base64Image = copyImage
+            .trim()
+            .replace(/^data:image\/\w+;base64,/, '');
+          try {
+            const binaryString = window.atob(base64Image);
+            const uint8Array = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+            const fileName = 'copyImage.jpg';
+            const file = new File([blob], fileName, { type: 'image/jpeg' });
+            this.postData.file = file;
+          } catch (error) {
+            console.error('Base64 decoding error:', error);
+          }
+        } else {
+          this.postData['postdescription'] = content;
+        }
+      } else {
+        this.postData['postdescription'] = content;
+      }
+    } else {
+      this.postData['postdescription'] = content;
+    }
   }
 }
