@@ -86,7 +86,7 @@ export function app(): express.Express {
         var seo: any = {
           title: 'Reefer Social',
           description:
-            'The Umbrella platform for All freedom based projects worldwide',
+            'Social Reefer discussions with optional video conferencing. Dispensaries and Farmers promote cannabis products.',
           image:
             'https://reefer.social/assets/images/profile-cover.png',
           site: 'https://reefer.social/',
