@@ -93,6 +93,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (name) {
           this.communitySlug = name;
           this.getCommunityDetailsBySlug();
+        } else{
+          this.sharedService.advertizementLink = [];
         }
 
         this.isNavigationEnd = true;
@@ -208,6 +210,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.spinner.hide();
           if (res?.Id) {
             const details = res;
+            if (res.pageType === 'page') {
+              this.sharedService.getAdvertizeMentLink(res?.Id);
+            } else {
+              this.sharedService.advertizementLink = null;
+            }
             const data = {
               title: details?.CommunityName,
               url: `${environment.webUrl}${details?.pageType}/${details?.slug}`,
@@ -412,6 +419,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         keyboard: false,
         size: 'lg',
       });
+      data.link1 = this.sharedService?.advertizementLink[0]?.url;
+      data.link2 = this.sharedService?.advertizementLink[1]?.url;
     }
     modalRef.componentInstance.title = `Edit ${data.pageType} Details`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
@@ -592,7 +601,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
-          this.postData['postdescription'] = content.replace(copyImage, '');
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
+          this.postData['postdescription'] = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          // this.postData['postdescription'] = content.replace(copyImage, '');
           const base64Image = copyImage
             .trim()
             .replace(/^data:image\/\w+;base64,/, '');
