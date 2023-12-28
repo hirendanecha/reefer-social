@@ -93,6 +93,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         if (name) {
           this.communitySlug = name;
           this.getCommunityDetailsBySlug();
+        } else{
+          this.sharedService.advertizementLink = [];
         }
 
         this.isNavigationEnd = true;
@@ -208,6 +210,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.spinner.hide();
           if (res?.Id) {
             const details = res;
+            if (res.pageType === 'page') {
+              this.sharedService.getAdvertizeMentLink(res?.Id);
+            } else {
+              this.sharedService.advertizementLink = null;
+            }
             const data = {
               title: details?.CommunityName,
               url: `${environment.webUrl}${details?.pageType}/${details?.slug}`,
@@ -412,6 +419,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         keyboard: false,
         size: 'lg',
       });
+      data.link1 = this.sharedService?.advertizementLink[0]?.url;
+      data.link2 = this.sharedService?.advertizementLink[1]?.url;
     }
     modalRef.componentInstance.title = `Edit ${data.pageType} Details`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
