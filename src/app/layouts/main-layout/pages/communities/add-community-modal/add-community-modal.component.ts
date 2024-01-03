@@ -38,7 +38,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   selectedFile: File;
   userId = '';
   profileId = '';
-  originUrl = environment.webUrl + 'health-practitioner/';
+  originUrl = environment.webUrl + 'dispensaries-wholesale/';
   logoImg: any = {
     file: null,
     url: '',
