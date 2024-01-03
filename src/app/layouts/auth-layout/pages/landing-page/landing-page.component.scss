@@ -300,6 +300,6 @@
 }
 ::ng-deep.c-button-landing {
   svg path {
-    fill: #000428;
+    fill: var(--primary-color);
   }
 }
