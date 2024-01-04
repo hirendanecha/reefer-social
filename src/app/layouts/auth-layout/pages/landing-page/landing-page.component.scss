@@ -17,12 +17,11 @@
 
   .custom-height {
     background-image: url(/assets/images/landingpage/reefer.social-hm-pg.png);
-    background-size: cover;
+    background-size: 100% 100%;
+    background-position: center center;
     background-repeat: no-repeat;
     object-fit: cover;
     height: calc(100vh - 48px);
-    min-height: 400px;
-
     .banner-text {
       max-width: 700px;
       width: 100%;
