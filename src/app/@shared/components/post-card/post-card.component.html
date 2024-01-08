@@ -228,8 +228,7 @@
                     <span>Download</span>
                   </a>
                 </button>
-                <button ngbDropdownItem>
-                  <a
+                <button ngbDropdownItem *ngIf="!isViewProfile">                  <a
                     class="droplist d-flex align-items-center gap-2"
                     (click)="editPost(post)"
                   >
