@@ -11,5 +11,7 @@ export const environment = {
   socketUrl: `${url}/`,
   webUrl: webUrl,
   tubeUrl: tubeUrl,
-  domain: '.reefer.social'
+  domain: '.reefer.social',
+  siteKey:'0x4AAAAAAAUxBSzkmShg4ay7',
+  secretKey:'0x4AAAAAAAUxBUyv1TfJM6t1rvaqtQi2hUA'
 };
