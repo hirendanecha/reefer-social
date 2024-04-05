@@ -57,7 +57,7 @@ const routes: Routes = [
           isShowRightSideBar: true,
           isShowResearchLeftSideBar: true
         },
-        canActivate: mapToCanActivate([AuthenticationGuard]),
+        // canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
         path: 'request-video-call',
