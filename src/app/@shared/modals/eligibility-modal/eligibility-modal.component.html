@@ -1,0 +1,17 @@
+<div class="modal-body p-sm-8">
+  <h4 class="text-color">Are You Eligible to visit Reefer.social?</h4>
+  <div class="d-flex form-check gap-3">
+    <input
+      class="p-3 form-check-input c-pointer"
+      type="checkbox"
+      name="countryCheckbox"
+      id="countryCheckbox"
+      [(ngModel)]="isEligibleChecked"
+    />
+    <h5>I am at least 21 years old.</h5>
+  </div>
+  <button type="button" class="btn cmn-btn rounded-5 px-13 py-3" (click)="activeModal.close('cancel')" [disabled]="!isEligibleChecked">
+    Proceed
+  </button>
+  <span>Reefer.social operates within state laws regarding access to cannabis and the information on this website has not been evaluated by the Food & Drug Administration. Information is shared for educational purposes only.</span>
+</div>

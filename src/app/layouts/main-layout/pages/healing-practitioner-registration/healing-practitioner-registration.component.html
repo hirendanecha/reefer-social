@@ -1,47 +1,136 @@
-<ng-container *ngIf="!selectPractitionerPage">
+<!-- <ng-container *ngIf="!selectPractitionerPage"> -->
+<ng-container>
   <div class="healing-registration-container">
     <h2 class="text-center">What do you want to do?</h2>
-    <div class="d-flex justify-content-center mt-10">
-      <div class="d-flex flex-wrap justify-content-center">
-        <div class="card text-center">
-          <div class="card-body">
-            <p class="card-text">
-              Find a Naturopathic Doctor or Holistic Practitioner to have a
-              private video consultation?
-            </p>
-            <button>
-              <a (click)="backPreview()" class="btn cmn-btn">Select</a>
-            </button>
+    <ng-container *ngIf="isfindDispensarySelect">
+      <div class="d-flex justify-content-center mt-10">
+        <div class="d-flex flex-column">
+          <div class="form-check">
+            <label class="form-check-label selectCountry d-flex gap-2 gap-md-0 flex-column flex-md-row w-100" for="countryCheckbox">
+              <span class="d-none d-sm-block"
+                >Find a local Dispensary in&nbsp;</span
+              >Country:
+              <select
+                id="Country"
+                required
+                name="Country"
+                class="input-area w-100"
+                (change)="changeCountry()"
+                [(ngModel)]="selectedCountry"
+              >
+                <option
+                  [value]="item.country_code"
+                  *ngFor="let item of allCountryData"
+                >
+                  {{ item.country }}
+                </option>
+              </select>
+              State:
+              <select
+                id="State"
+                required
+                name="State"
+                class="input-area w-100"
+                [(ngModel)]="selectedState"
+              >
+                <option [value]="item.state" *ngFor="let item of allStateData">
+                  {{ item.state }}
+                </option>
+              </select>
+            </label>
           </div>
         </div>
-        <div class="card text-center">
+      </div>
+    </ng-container>
+    <div class="d-flex justify-content-center mt-5 mt-sm-10">
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="card text-center" *ngIf="!isfindDispensarySelect">
           <div class="card-body">
-            <p class="card-text">
-              Social discussion on how to heal various ailments?
-            </p>
+            <p class="card-text">Reefer Social Join a Reefer Party!</p>
             <button>
               <a href="/home" class="btn cmn-btn">Select</a>
+              <!-- <a (click)="backPreview()" class="btn cmn-btn">Select</a> -->
             </button>
           </div>
         </div>
         <div class="card text-center">
           <div class="card-body">
-            <p class="card-text">
-              Watch videos from Naturopathic Doctors and Holistic Practitioners
-            </p>
-            <button>
-              <a href="https://tube.reefer.social/" class="btn cmn-btn"
-                >Select</a
+            <p class="card-text">Find a Dispensary in your location</p>
+            <div
+              class="d-flex flex-column gap-2 mb-3"
+              *ngIf="isfindDispensarySelect"
+            >
+              <input
+                type="text"
+                class="input-area"
+                placeholder="Enter Dispensary Name"
+                [(ngModel)]="findDispensaryby.name"
+              />
+              <input
+                type="text"
+                class="input-area"
+                placeholder="Enter Zip code"
+                [(ngModel)]="findDispensaryby.zip"
+              />
+            </div>
+            <button (click)="findDispensary()">
+              <a
+                class="btn"
+                [ngClass]="isfindDispensarySelect ? 'btn-success' : 'cmn-btn'"
               >
+                {{ isfindDispensarySelect ? "Selected" : "Select" }}</a
+              >
+            </button>
+          </div>
+        </div>
+        <div class="card text-center" *ngIf="!isfindDispensarySelect">
+          <div class="card-body">
+            <p class="card-text">Research cannabis products</p>
+            <button>
+              <a href="/research" class="btn cmn-btn">Select</a>
+            </button>
+          </div>
+        </div>
+        <div class="card text-center" *ngIf="!isfindDispensarySelect">
+          <div class="card-body">
+            <p class="card-text">Farming industry and dispensary match maker</p>
+            <button>
+              <!-- <a href="https://tube.reefer.social/" class="btn cmn-btn"
+                >Select</a
+              > -->
+              <a href="/home" class="btn cmn-btn">Select</a>
             </button>
           </div>
         </div>
       </div>
     </div>
+    <div class="mt-0 mt-sm-5" *ngIf="isfindDispensarySelect">
+      <button
+        (click)="findDispensary()"
+        class="btn cmn-btn d-flex align-items-center float-start"
+      >
+        <fa-icon
+          [icon]="['fas', 'arrow-left-long']"
+          class="c-pointer close-icon me-2"
+          title="Back"
+        />Back
+      </button>
+      <button
+        (click)="nextPageSearch()"
+        class="btn cmn-btn d-flex align-items-center float-end"
+      >
+        Next
+        <fa-icon
+          [icon]="['fas', 'arrow-right-long']"
+          class="c-pointer close-icon ms-2"
+          title="Next"
+        />
+      </button>
+    </div>
   </div>
 </ng-container>
 
-<ng-container *ngIf="selectPractitionerPage">
+<!-- <ng-container *ngIf="selectPractitionerPage">
   <div class="d-flex justify-content-center mt-10">
     <div class="d-flex flex-column">
       <div class="form-check">
@@ -54,7 +143,8 @@
           (change)="updateCheckbox('country')"
         />
         <label class="form-check-label selectCountry" for="countryCheckbox">
-          <span class="d-none d-sm-block">Find a local practitioner in&nbsp;</span
+          <span class="d-none d-sm-block"
+            >Find a local practitioner in&nbsp;</span
           >Country:
           <select
             id="Country"
@@ -144,7 +234,11 @@
                 (change)="onAreaboxChange($event, area)"
               />
               <div class="title-container">
-                <label class="form-check-label ms-2" for="modality{{ area.aId }}" [title]="area.name">
+                <label
+                  class="form-check-label ms-2"
+                  for="modality{{ area.aId }}"
+                  [title]="area.name"
+                >
                   {{ area.name }}
                 </label>
               </div>
@@ -178,4 +272,4 @@
       />
     </button>
   </div>
-</ng-container>
+</ng-container> -->

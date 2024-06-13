@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCommunityModalComponent } from './add-community-modal/add-community-modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -19,6 +19,11 @@ export class CommunitiesComponent {
   isCommunityLoader: boolean = false;
   profileId: number = null;
 
+  activePage = 0;
+  isLoading = false;
+  hasMoreData = false;
+  routeData: any = {};
+
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -29,11 +34,10 @@ export class CommunitiesComponent {
     this.profileId = Number(localStorage.getItem('profileId'));
     console.log(history.state.data)
     if (history.state.data) {
-      const data = history.state.data
-      this.getAllCommunities(data);
+      this.routeData = history.state.data
+      this.loadMore(this.routeData);
     } else {
-
-      this.getAllCommunities({});
+      this.loadMore({});
     }
     // this.getCommunities();
     const data = {
@@ -73,15 +77,49 @@ export class CommunitiesComponent {
     });
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: Event) {
+    if (this.router.url.includes('dispensaries-wholesale')) {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const thresholdFraction = 0.2;
+      const threshold = windowHeight * thresholdFraction;
+
+      if (scrollY + windowHeight >= documentHeight - threshold) {
+        if (!this.isLoading && !this.hasMoreData) {
+          this.loadMore(this.routeData);
+        }
+      }
+    }
+  }
+
+
+  loadMore(data): void {
+    this.isCommunityLoader = true;
+    this.isLoading = true;
+    this.activePage = this.activePage + 1;
+    const updatedData = {
+      dispensaryName: data.dispensaryName,
+      selectedCountry: data.selectedCountry,
+      selectedState: data.selectedState,
+      zipCode: data.zipCode,
+      page: this.activePage,
+      size: 10
+    } 
+    this.getAllCommunities(updatedData);
+  }
+
   getAllCommunities(data: any): void {
-    this.communities = [];
     this.isCommunityLoader = true;
     this.communityService.getAllCommunities(data).subscribe({
       next: (res: any) => {
-        if (res) {
-          this.communities = res;
+        this.isLoading = false;
+        this.isCommunityLoader = false;
+        if (res?.length > 0) {
+          this.communities = [...this.communities, ...res];
         } else {
-          this.communities = [];
+          this.hasMoreData = true;
         }
       },
       error: (error) => {
