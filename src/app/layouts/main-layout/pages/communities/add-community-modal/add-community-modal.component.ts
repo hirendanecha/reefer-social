@@ -59,19 +59,16 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
 
   communityForm = new FormGroup({
     profileId: new FormControl(),
-    CommunityName: new FormControl(''),
-    CommunityDescription: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     slug: new FormControl('', [Validators.required]),
-    pageType: new FormControl('community', [Validators.required]),
-    isApprove: new FormControl('N', [Validators.required]),
-    Country: new FormControl('US', [Validators.required]),
-    Zip: new FormControl('', Validators.required),
+    image: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
-    State: new FormControl('', Validators.required),
-    City: new FormControl('', Validators.required),
-    County: new FormControl('', Validators.required),
-    logoImg: new FormControl('', Validators.required),
-    coverImg: new FormControl('', Validators.required),
+    country: new FormControl('US', [Validators.required]),
+    state: new FormControl('', Validators.required),
+    city: new FormControl('', Validators.required),
+    zip: new FormControl('', Validators.required),
+    phone: new FormControl('', Validators.required),
   });
 
   constructor(
@@ -89,28 +86,24 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getAllCountries();
-    this.getCategories();
 
     if (this.data.Id) {
       this.communityForm.patchValue({
         profileId: this.data?.profileId,
-        CommunityName: this.data?.CommunityName,
-        CommunityDescription: this.data?.CommunityDescription,
+        image: this.data?.image,
+        name: this.data?.name,
         slug: this.data?.slug,
-        pageType: this.data?.pageType,
-        isApprove: this.data?.isApprove,
-        Country: this.data?.Country,
-        Zip: this.data?.Zip,
-        State: this.data?.State,
-        City: this.data?.City,
-        address: this.data?.City,
-        County: this.data?.County,
-        logoImg: this.data?.logoImg,
-        coverImg: this.data?.coverImg,
+        email: this.data?.email,
+        phone: this.data?.phone,
+        country: this.data?.country,
+        zip: this.data?.zip,
+        state: this.data?.state,
+        city: this.data?.city,
+        address: this.data?.address,
       });
-      this.communityForm.get('State').enable();
-      this.communityForm.get('City').enable();
-      this.communityForm.get('County').enable();
+      this.communityForm.get('state').enable();
+      this.communityForm.get('city').enable();
+      this.communityForm.get('county').enable();
       console.log(this.data);
     }
   }
@@ -133,11 +126,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       uploadObs['logoImg'] = this.uploadService.uploadFile(this.logoImg?.file);
     }
 
-    if (this.coverImg?.file?.name) {
-      uploadObs['coverImg'] = this.uploadService.uploadFile(
-        this.coverImg?.file
-      );
-    }
+    // if (this.coverImg?.file?.name) {
+    //   uploadObs['coverImg'] = this.uploadService.uploadFile(
+    //     this.coverImg?.file
+    //   );
+    // }
 
     if (Object.keys(uploadObs)?.length > 0) {
       this.spinner.show();
@@ -147,16 +140,16 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
           if (res?.logoImg?.body?.url) {
             this.logoImg['file'] = null;
             this.logoImg['url'] = res?.logoImg?.body?.url;
-            this.communityForm.get('logoImg').setValue(res?.logoImg?.body?.url);
+            this.communityForm.get('image').setValue(res?.logoImg?.body?.url);
           }
 
-          if (res?.coverImg?.body?.url) {
-            this.coverImg['file'] = null;
-            this.coverImg['url'] = res?.coverImg?.body?.url;
-            this.communityForm
-              .get('coverImg')
-              .setValue(res?.coverImg?.body?.url);
-          }
+          // if (res?.coverImg?.body?.url) {
+          //   this.coverImg['file'] = null;
+          //   this.coverImg['url'] = res?.coverImg?.body?.url;
+          //   this.communityForm
+          //     .get('coverImg')
+          //     .setValue(res?.coverImg?.body?.url);
+          // }
 
           this.spinner.hide();
           this.onSubmit();
@@ -174,8 +167,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     if (!this.data.Id) {
       this.spinner.show();
       const formData = this.communityForm.value;
-      formData['emphasis'] = this.selectedValues;
-      formData['areas'] = this.selectedAreaValues;
+      // formData['emphasis'] = this.selectedValues;
+      // formData['areas'] = this.selectedAreaValues;
       if (this.communityForm.valid) {
         this.communityService.createCommunity(formData).subscribe({
           next: (res: any) => {
@@ -247,7 +240,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   }
 
   onCommunityNameChange(): void {
-    const slug = slugify(this.communityForm.get('CommunityName').value);
+    const slug = slugify(this.communityForm.get('name').value);
     this.communityForm.get('slug').setValue(slug);
   }
 
@@ -266,7 +259,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       next: (result) => {
         this.spinner.hide();
         this.allCountryData = result;
-        this.communityForm.get('Zip').enable();
+        this.communityForm.get('zip').enable();
         this.getAllState(this.defaultCountry)
       },
       error: (error) => {
@@ -296,11 +289,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   }
 
   changeCountry() {
-    this.communityForm.get('Zip').setValue('');
-    this.communityForm.get('State').setValue('');
-    this.communityForm.get('City').setValue('');
-    this.communityForm.get('County').setValue('');
-    // this.registerForm.get('Place').setValue('');
+    this.communityForm.get('zip').setValue('');
+    this.communityForm.get('state').setValue('');
+    this.communityForm.get('city').setValue('');
   }
 
   // onZipChange(event) {

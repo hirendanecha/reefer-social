@@ -1,6 +1,5 @@
 <div class="mb-5 d-flex gap-3 justify-content-between">
   <div class="d-flex flex-column pt-3">
-    <h6 class="d-block d-xl-none text-start">Communities</h6>
 
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeIdTab" (activeIdChange)="getCommunities()"
       class="nav flex-wrap tab-area">
@@ -22,7 +21,7 @@
   </div>
 </div>
 <div class="d-flex flex-column mb-4">
-  <div class="form-check d-flex gap-3">
+  <div class="d-flex gap-3">
       <div
       class="input-area h-100 w-100 d-flex gap-2"
     >
@@ -45,9 +44,10 @@
         required
         name="State"
         class="input-area w-100 h-100"
-        [(ngModel)]="selectedState"
+        [(ngModel)]="searchByState"
+        (click)="searchDispensaries('')"
       >
-      <option value="" disabled selected>State Dropdown</option>
+      <option value="" selected>State Dropdown</option>
         <option [value]="item.state" *ngFor="let item of allStateData">
           {{ item.state }}
         </option>

@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 
-
 @Component({
   selector: 'app-communities',
   templateUrl: './communities.component.html',
@@ -24,6 +23,7 @@ export class CommunitiesComponent implements OnInit {
   allCountryData: any;
   allStateData: any;
   selectedState = '';
+  searchByState = '';
 
   activePage = 0;
   isLoading = false;
@@ -36,12 +36,12 @@ export class CommunitiesComponent implements OnInit {
     private communityService: CommunityService,
     private seoService: SeoService,
     private router: Router,
-    private customerService:CustomerService
+    private customerService: CustomerService
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
-    console.log(history.state.data)
+    console.log(history.state.data);
     if (history.state.data) {
-      this.routeData = history.state.data
+      this.routeData = history.state.data;
       this.loadMore(this.routeData);
     } else {
       this.loadMore({});
@@ -63,11 +63,20 @@ export class CommunitiesComponent implements OnInit {
     this.communities = [];
 
     if (this.activeIdTab === 'joined') {
-      getCommunitiesObs = this.communityService.getJoinedCommunityByProfileId(this.profileId, 'community');
+      getCommunitiesObs = this.communityService.getJoinedCommunityByProfileId(
+        this.profileId,
+        'community'
+      );
     } else if (this.activeIdTab === 'local') {
-      getCommunitiesObs = this.communityService.getCommunity(this.profileId, 'community');
+      getCommunitiesObs = this.communityService.getCommunity(
+        this.profileId,
+        'community'
+      );
     } else {
-      getCommunitiesObs = this.communityService.getCommunityByUserId(this.profileId, 'community');
+      getCommunitiesObs = this.communityService.getCommunityByUserId(
+        this.profileId,
+        'community'
+      );
     }
     this.isCommunityLoader = true;
     getCommunitiesObs?.subscribe({
@@ -83,7 +92,7 @@ export class CommunitiesComponent implements OnInit {
       },
       complete: () => {
         this.isCommunityLoader = false;
-      }
+      },
     });
   }
 
@@ -97,13 +106,12 @@ export class CommunitiesComponent implements OnInit {
       const threshold = windowHeight * thresholdFraction;
 
       if (scrollY + windowHeight >= documentHeight - threshold) {
-        if (!this.isLoading && !this.hasMoreData) {
+        if (!this.isLoading && !this.hasMoreData && !this.searchByState) {
           this.loadMore(this.routeData);
         }
       }
     }
   }
-
 
   loadMore(data): void {
     this.isCommunityLoader = true;
@@ -115,8 +123,8 @@ export class CommunitiesComponent implements OnInit {
       selectedState: data.selectedState,
       zipCode: data.zipCode,
       page: this.activePage,
-      size: 10
-    } 
+      size: 10,
+    };
     this.getAllCommunities(updatedData);
   }
 
@@ -137,16 +145,40 @@ export class CommunitiesComponent implements OnInit {
       },
       complete: () => {
         this.isCommunityLoader = false;
-      }
+      },
     });
   }
-    onUserName(event: any){ 
-      const searchTerm = event.target.value;
-      this.communities = this.communities.filter((community: any) => {
-        return community.name.toLowerCase().includes(searchTerm.toLowerCase());
-      });
-    } 
- 
+  onUserName(event: any) {
+    const searchTerm = event.target.value;
+    // this.communities = this.communities.filter((community: any) => {
+    //   return community.name.toLowerCase().includes(searchTerm.toLowerCase());
+    // });
+    this.searchDispensaries(searchTerm);
+  }
+
+  searchDispensaries(searchText): void {
+    const searchData = {
+      dispensaryName: searchText,
+      selectedCountry: null,
+      selectedState: this.searchByState,
+      zipCode: null,
+      page: 1,
+      size: 40,
+    };
+    this.communityService.getAllCommunities(searchData).subscribe({
+      next: (res: any) => {
+        if (res?.length > 0) {
+          this.communities = res;
+        } else {
+          this.communities = [];
+        }
+      },
+      error: () => {
+        this.communities = [];
+      },
+    });
+  }
+
   changeCountry() {
     if (this.isCountryChecked) {
       this.getAllState();
@@ -172,7 +204,10 @@ export class CommunitiesComponent implements OnInit {
       next: (result) => {
         this.spinner.hide();
         // this.allCountryData = result;
-        this.allCountryData = result.filter(country => country.country_code === 'US' || country.country_code === 'CA');
+        this.allCountryData = result.filter(
+          (country) =>
+            country.country_code === 'US' || country.country_code === 'CA'
+        );
         this.getAllState();
       },
       error: (error) => {
@@ -182,9 +217,8 @@ export class CommunitiesComponent implements OnInit {
     });
   }
 
-
   createCommunity() {
-    this.router.navigate(['dispensaries-wholesale/add-practitioner'])
+    this.router.navigate(['dispensaries-wholesale/add-practitioner']);
   }
   // createCommunity() {
   //   const modalRef = this.modalService.open(AddCommunityModalComponent, {
