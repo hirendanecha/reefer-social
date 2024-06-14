@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCommunityModalComponent } from './add-community-modal/add-community-modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -6,6 +6,7 @@ import { CommunityService } from 'src/app/@shared/services/community.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { CustomerService } from 'src/app/@shared/services/customer.service';
 
 
 @Component({
@@ -13,11 +14,16 @@ import { Router } from '@angular/router';
   templateUrl: './communities.component.html',
   styleUrls: ['./communities.component.scss'],
 })
-export class CommunitiesComponent {
+export class CommunitiesComponent implements OnInit {
   activeIdTab: string = 'local';
   communities: any = [];
   isCommunityLoader: boolean = false;
+  isCountryChecked: boolean = true;
   profileId: number = null;
+  selectedCountry = 'US';
+  allCountryData: any;
+  allStateData: any;
+  selectedState = '';
 
   activePage = 0;
   isLoading = false;
@@ -29,7 +35,8 @@ export class CommunitiesComponent {
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
     private seoService: SeoService,
-    private router: Router
+    private router: Router,
+    private customerService:CustomerService
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
     console.log(history.state.data)
@@ -46,6 +53,9 @@ export class CommunitiesComponent {
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
+  }
+  ngOnInit(): void {
+    this.getAllCountries();
   }
 
   getCommunities(): void {
@@ -128,6 +138,47 @@ export class CommunitiesComponent {
       complete: () => {
         this.isCommunityLoader = false;
       }
+    });
+  }
+    onUserName(event: any){ 
+      const searchTerm = event.target.value;
+      this.communities = this.communities.filter((community: any) => {
+        return community.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    } 
+ 
+  changeCountry() {
+    if (this.isCountryChecked) {
+      this.getAllState();
+    }
+  }
+  getAllState() {
+    this.spinner.show();
+    const selectCountry = this.selectedCountry;
+    this.customerService.getStateData(selectCountry).subscribe({
+      next: (result) => {
+        this.spinner.hide();
+        this.allStateData = result;
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
+  }
+  getAllCountries() {
+    this.spinner.show();
+    this.customerService.getCountriesData().subscribe({
+      next: (result) => {
+        this.spinner.hide();
+        // this.allCountryData = result;
+        this.allCountryData = result.filter(country => country.country_code === 'US' || country.country_code === 'CA');
+        this.getAllState();
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
     });
   }
 
