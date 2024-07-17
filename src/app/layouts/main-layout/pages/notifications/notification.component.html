@@ -7,7 +7,7 @@
       <div
         class="notification-single d-center p-5 gap-5 justify-content-between"
       >
-      <a [routerLink]="'/post/' + notification.postId">
+      <a [routerLink]=" notification?.postId === null ? '/profile-chats' : '/post/' + notification?.postId">
         <div class="d-flex top-review-wrapper gap-3 align-items-center">
           <div class="avatar-item">
             <img

@@ -20,12 +20,12 @@ export class CustomerService {
 
   getCustomer(id: number): Observable<any> {
     this.http
-    .get<any>(`${this.baseUrl}/${id}`)
-    .pipe(take(1))
-    .subscribe((customers) => {
-      const cust = customers?.[0];
-      this.customerObs.next(cust);
-    });
+      .get<any>(`${this.baseUrl}/${id}`)
+      .pipe(take(1))
+      .subscribe((customers) => {
+        const cust = customers?.[0];
+        this.customerObs.next(cust);
+      });
 
     return this.customerObs;
   }
@@ -73,11 +73,11 @@ export class CustomerService {
   }
 
   updateProfile(id, customer: Customer): Observable<Object> {
-    const token = localStorage.getItem("auth-token");
+    const token = localStorage.getItem('auth-token');
     return this.http.put(`${this.baseUrl}/profile/${id}`, customer, {
       headers: {
-        'Authorization': 'Bearer ' + token
-      }
+        Authorization: 'Bearer ' + token,
+      },
     });
   }
 
@@ -107,19 +107,24 @@ export class CustomerService {
   }
 
   logout(): Observable<any> {
-    return this.http.get(
-      `${this.baseUrl}/logout`,
-      httpOptions
-    );
+    return this.http.get(`${this.baseUrl}/logout`, httpOptions);
   }
 
   getNotification(id): Observable<any> {
-    return this.http.get(
-      `${this.baseUrl}/notification/${id}&q=${Date.now()}`,
-    );
+    return this.http.get(`${this.baseUrl}/notification/${id}&q=${Date.now()}`);
   }
 
   verifyToken(token): Observable<any> {
     return this.http.get(`${this.baseUrl}/verify-token/${token}`);
+  }
+
+  startCallToBuzzRing(callerData: Object): Observable<any>{
+    const url = 'https://ring-api.reefer.social/api/v1/customers/call-notification';
+    return this.http.post(url, callerData);
+  }
+
+  startGroupCallToBuzzRing(callerData: Object): Observable<any>{
+    const url = 'https://ring-api.reefer.social/api/v1/customers/group-call-notification';
+    return this.http.post(url, callerData);
   }
 }

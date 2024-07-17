@@ -86,6 +86,31 @@ import {
   faSquarePlus,
   faMapMarker,
   faEnvelope,
+  faBan,
+  faChevronLeft,
+  faCircleChevronDown,
+  faCircleChevronUp,
+  faCommentAlt,
+  faCopy,
+  faEllipsisH,
+  faEllipsisV,
+  faFileVideo,
+  faMobile,
+  faPaperclip,
+  faPencil,
+  faPhoneFlip,
+  faPhoneSlash,
+  faPhoneVolume,
+  faPhotoFilm,
+  faRepeat,
+  faReply,
+  faSearch,
+  faSliders,
+  faTableList,
+  faTicketAlt,
+  faUsers,
+  faUserTimes,
+  faVoicemail,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -113,6 +138,15 @@ import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal
 import { AppointmentCallComponent } from './modals/appointment-call/appointment-call.component';
 import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
 import { EligibilityModalComponent } from './modals/eligibility-modal/eligibility-modal.component';
+import { QRCodeModule } from 'angularx-qrcode';
+import { IncomingcallModalComponent } from './modals/incoming-call-modal/incoming-call-modal.component';
+import { OutGoingCallModalComponent } from './modals/outgoing-call-modal/outgoing-call-modal.component';
+import { CreateGroupModalComponent } from './modals/create-group-modal/create-group-modal.component';
+import { EditGroupModalComponent } from './modals/edit-group-modal/edit-group-modal.component';
+import { ForwardChatModalComponent } from './modals/forward-chat-modal/forward-chat-modal.component';
+import { AppQrModalComponent } from './modals/app-qr-modal/app-qr-modal.component';
+import { GalleryImgPreviewComponent } from './components/gallery-img-preview/gallery-img-preview.component';
+import { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
 
 
 const sharedComponents = [
@@ -141,7 +175,15 @@ const sharedComponents = [
   EditPostModalComponent,
   AppointmentCallComponent,
   ConferenceLinkComponent,
-  EligibilityModalComponent
+  EligibilityModalComponent,
+  IncomingcallModalComponent,
+  OutGoingCallModalComponent,
+  CreateGroupModalComponent,
+  EditGroupModalComponent,
+  ForwardChatModalComponent,
+  AppQrModalComponent,
+  MediaGalleryComponent,
+  GalleryImgPreviewComponent,
 ];
 
 const sharedModules = [
@@ -158,6 +200,7 @@ const sharedModules = [
   FontAwesomeModule,
   PipeModule,
   MentionModule,
+  QRCodeModule,
   // PdfViewerModule
 ];
 
@@ -239,7 +282,34 @@ export class SharedModule {
       faEyeSlash,
       faSquarePlus,
       faMapMarker,
-      faEnvelope
+      faEnvelope,
+      faPaperclip,
+      faEllipsisH,
+      faSearch,
+      faBan,
+      faFileVideo,
+      faSliders,
+      faCopy,
+      faPhoneSlash,
+      faEllipsisV,
+      faUsers,
+      faCommentAlt,
+      faPencil,
+      faReply,
+      faUserTimes,
+      faPhotoFilm,
+      faRepeat,
+      faMobile,
+      faTicketAlt,
+      faPhotoFilm,
+      faCopy,
+      faTableList,
+      faChevronLeft,
+      faPhoneFlip,
+      faVoicemail,
+      faPhoneVolume,
+      faCircleChevronUp,
+      faCircleChevronDown,
     );
   }
 }

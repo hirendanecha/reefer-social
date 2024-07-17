@@ -13,5 +13,8 @@ export const environment = {
   tubeUrl: tubeUrl,
   domain: '.reefer.social',
   siteKey:'0x4AAAAAAAUxBSzkmShg4ay7',
-  secretKey:'0x4AAAAAAAUxBUyv1TfJM6t1rvaqtQi2hUA'
+  secretKey:'0x4AAAAAAAUxBUyv1TfJM6t1rvaqtQi2hUA',
+  EncryptIV: 8625401029409790,
+  EncryptKey: 8625401029409790,
+  qrLink: `${webUrl}settings/edit-profile/`,
 };

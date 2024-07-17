@@ -30,7 +30,7 @@ export class ConferenceLinkComponent {
   myProp: string;
   hasDisplayedError = false;
   profileId: number;
-  originUrl = 'https://reefer.social/appointment-call/'
+  originUrl = 'https://reefer.social/call/'
   link: string = '';
   constructor(
     private spinner: NgxSpinnerService,

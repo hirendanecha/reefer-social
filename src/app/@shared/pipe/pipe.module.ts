@@ -6,10 +6,13 @@ import { CommaSeperatePipe } from './comma-seperate.pipe';
 import { DateDayPipe } from "../services/date-day.pipe";
 import { NoSanitizePipe } from "./sanitize.pipe";
 import { RandomAdvertisementUrlPipe } from "./random-advertisement.pipe";
+import { MessageDatePipe } from "./message-date.pipe";
+import { MessageTimePipe } from "./message-time.pipe";
+import { HighlightPipe } from "./hightlight-text.pipe";
 
 @NgModule({
-  declarations: [SafePipe, GetImageUrlPipe, CommaSeperatePipe, DateDayPipe, NoSanitizePipe, RandomAdvertisementUrlPipe],
+  declarations: [SafePipe, GetImageUrlPipe, CommaSeperatePipe, DateDayPipe, NoSanitizePipe, RandomAdvertisementUrlPipe, MessageDatePipe, MessageTimePipe, HighlightPipe],
   imports: [CommonModule],
-  exports: [SafePipe, GetImageUrlPipe, CommaSeperatePipe, DateDayPipe, NoSanitizePipe, RandomAdvertisementUrlPipe],
+  exports: [SafePipe, GetImageUrlPipe, CommaSeperatePipe, DateDayPipe, NoSanitizePipe, RandomAdvertisementUrlPipe, MessageDatePipe, MessageTimePipe, HighlightPipe],
 })
 export class PipeModule { }

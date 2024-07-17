@@ -71,7 +71,22 @@ const routes: Routes = [
         canActivate: mapToCanActivate([AuthenticationGuard]),
       },
       {
-        path: 'appointment-call/:callId',
+        path: 'profile-chats',
+        loadChildren: () =>
+          import('./pages/profile-chats/profile-chats.module').then(
+            (m) => m.ProfileChartsModule
+          ),
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
+          isShowChatListSideBar: true,
+          isShowChatModule: true
+        },
+        canActivate: mapToCanActivate([AuthenticationGuard]),
+      },
+      {
+        path: 'call/:callId',
         component: AppointmentCallComponent,
         data: {
           isShowLeftSideBar: false,

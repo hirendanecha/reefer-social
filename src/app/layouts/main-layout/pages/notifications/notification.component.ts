@@ -70,6 +70,7 @@ export class NotificationsComponent {
         this.toastService.success(
           res.message || 'Notification delete successfully'
         );
+        this.notificationList = [];
         this.getNotificationList();
       },
     });
@@ -79,6 +80,7 @@ export class NotificationsComponent {
     this.customerService.readUnreadNotification(id, isRead).subscribe({
       next: (res) => {
         this.toastService.success(res.message); 
+        this.notificationList = [];
         this.getNotificationList();
       },    
     });

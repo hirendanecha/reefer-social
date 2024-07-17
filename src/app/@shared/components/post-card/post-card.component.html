@@ -36,7 +36,7 @@
           class="info-area d-flex justify-content-start align-items-center position-relative"
         >
           <div
-            class="d-flex flex-column h6 m-0"
+            class="d-flex flex-column h6 m-0 fw-bold"
             *ngIf="post?.Username || post?.FirstName"
           >
             <div
@@ -91,13 +91,25 @@
                 onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';"
                 alt="avatar"
               />
+              <div class="d-flex gap-3 align-items-baseline">
               <p class="cursor mt-2">
                 {{ (post?.Username || post?.FirstName)?.split(" ")?.join("") }}
               </p>
+
+              <button>
+                <a
+                  class="droplist d-flex align-items-center gap-2"
+                  [appCopyClipboard]="post.Username"
+                >
+                  <fa-icon [icon]="['fas', 'copy']" />
+                </a>
+              </button>
+            </div>
+              
               <div
                 class="d-flex"
                 *ngIf="
-                  profileId != post.profileid && tokenService.getToken()
+                  profileId != post.profileid && tokenService.getCredentials()
                 "
               >
                 <button>
@@ -128,11 +140,40 @@
                     <span>Stop See First</span>
                   </a>
                 </button>
+                
               </div>
+              <div
+                class="d-flex mt-2"
+                *ngIf="
+                  profileId != post.profileid && tokenService.getCredentials()
+                "
+              >
+                <button>
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    (click)="selectMessaging(post)"
+                  >
+                    <fa-icon [icon]="['fas', 'envelope']" />
+                    <span>Messaging</span>
+                  </a>
+                </button>
+                <span class="me-2 ms-2">|</span>
+                <button *ngIf="!seeFirstList.includes(post.profileid)">
+                  <a
+                    class="droplist d-flex align-items-center gap-2"
+                    routerLink="/platforms" target="_blank"
+                    
+                  >
+                    <fa-icon [icon]="['fas', 'table-list']" />
+                    <span>Platforms</span>
+                  </a>
+                </button> 
+              </div>
+              
               <!-- <div
                 class="d-flex"
                 *ngIf="
-                  +profileId === post.profileid && tokenService.getToken()
+                  +profileId === post.profileid && tokenService.getCredentials()
                 "
               >
                 <button (click)="goToViewProfile(post.profileid)">
@@ -156,13 +197,13 @@
 
         <div class="d-flex">
           <div
-            *ngIf="shareButton && tokenService.getToken()"
+            *ngIf="shareButton && tokenService.getCredentials()"
             class="cursor me-5"
             (click)="getPostUrl(post)"
           >
             <fa-icon [icon]="['fas', 'share']" class="font-24-px m-0" />
           </div>
-          <div ngbDropdown *ngIf="tokenService.getToken()">
+          <div ngbDropdown *ngIf="tokenService.getCredentials()">
             <fa-icon
               [icon]="['fas', 'ellipsis']"
               class="font-24-px m-0"
@@ -171,6 +212,15 @@
             />
 
             <div ngbDropdownMenu class="dropdown-menu">
+              <button ngbDropdownItem *ngIf="post.streamname">
+                <a
+                  class="droplist d-flex align-items-center gap-2"
+                  [href]="tubeUrl + '/video/' + post.id" target="_blank"
+                >
+                  <fa-icon [icon]="['fas', 'play']" />
+                  <span>Large Player</span>
+                </a>
+              </button>
               <ng-container *ngIf="profileId != post.profileid">
                 <button
                   ngbDropdownItem
@@ -228,7 +278,8 @@
                     <span>Download</span>
                   </a>
                 </button>
-                <button ngbDropdownItem *ngIf="!isViewProfile">                  <a
+                <button ngbDropdownItem *ngIf="!isViewProfile">
+                  <a
                     class="droplist d-flex align-items-center gap-2"
                     (click)="editPost(post)"
                   >
@@ -246,7 +297,6 @@
                   </a>
                 </button>
               </ng-container>
-
               <button ngbDropdownItem>
                 <a
                   class="droplist d-flex align-items-center gap-2"
@@ -263,7 +313,7 @@
     </div>
     <div
       class="d-none d-lg-flex text-center justify-content-center align-items-center h-24-px w-100 mt-lg-4 ms-2 ms-lg-0"
-      *ngIf="profileId != post.profileid && tokenService.getToken()"
+      *ngIf="profileId != post.profileid && tokenService.getCredentials()"
     >
       <button>
         <a
@@ -321,7 +371,7 @@
       [innerHTML]="post.postdescription | noSanitize"
     ></p>
     <ng-container *ngIf="descriptionimageUrl">
-      <app-img-preview [src]="descriptionimageUrl" classes="w-100" />
+      <app-img-preview [src]="descriptionimageUrl" class="mb-2" classes="w-100" />
     </ng-container>
     <ng-container *ngIf="post.parentPostId">
       <app-re-post-card [id]="post.parentPostId" />
@@ -370,7 +420,7 @@
         data-toggle="tooltip"
         data-placement="bottom"
         title="Post Likes"
-        [disabled]="!tokenService.getToken()"
+        [disabled]="!tokenService.getCredentials()"
         (click)="
           post.react == 'L' ? dislikeFeedPost(post) : reactLikeOnPost(post)
         "
@@ -396,7 +446,7 @@
         data-toggle="tooltip"
         data-placement="bottom"
         title="View Comments"
-        [disabled]="!tokenService.getToken()"
+        [disabled]="!tokenService.getCredentials()"
         (click)="viewComments(post?.id)"
       >
         <fa-icon [icon]="['fas', 'comment']" class="font-20-px" />
@@ -405,7 +455,7 @@
       </button>
     </div>
 
-    <form *ngIf="tokenService.getToken()">
+    <form *ngIf="tokenService.getCredentials()">
       <div class="d-flex mt-5 gap-3 align-items-start">
         <img
           loading="lazy"
@@ -415,8 +465,8 @@
         />
 
         <div class="px-3 gap-2 align-items-center w-100">
-          <div
-            class="d-flex align-items-baseline custom-width-comment position-relative"
+          <div [attr.id]="'comment-' + post.id"
+            class="d-flex align-items-baseline custom-width-comment position-relative gap-sm-0 gap-3"
           >
             <!-- <div
               #parentPostCommentElement
@@ -430,16 +480,16 @@
               [value]="commentMessageInputValue"
               [isShowMetaLoader]="true"
               [isShowEmojis]="true"
-              (onDataChange)="onTagUserInputChangeEvent($event)"
+              (onDataChange)="onTagUserInputChangeEvent($event, post.id)"
             />
 
-            <div class="d-flex gap-2 lign-items-center">
+            <div class="d-flex gap-7 gap-sm-2 lign-items-center flex-column-reverse flex-sm-row position-relative">
               <div class="file-upload d-flex me-1">
                 <label class="file">
                   <input
                     type="file"
                     accept="image/*"
-                    (change)="onPostFileSelect($event, 'parent')"
+                    (change)="onPostFileSelect($event, 'parent', post.id)"
                   />
                   <span
                     class="file-custom border-0 d-grid text-center"
@@ -536,7 +586,7 @@
                         />
 
                         <div ngbDropdownMenu class="dropdown-menu">
-                          <button ngbDropdownItem>
+                          <button ngbDropdownItem *ngIf="comment.profileId == profileId">
                             <a
                               class="droplist d-flex align-items-center gap-2"
                               (click)="editComment(comment)"
@@ -585,7 +635,7 @@
                   <li class="d-center">
                     <button
                       class="d-center gap-1 gap-sm-2 font-12-px"
-                      [disabled]="!tokenService.getToken()"
+                      [disabled]="!tokenService.getCredentials()"
                       (click)="
                         comment.react == 'L'
                           ? disLikeComments(comment)
@@ -604,7 +654,7 @@
                   <li class="d-center">
                     <button
                       class="d-center gap-1 gap-sm-2 font-12-px"
-                      [disabled]="!tokenService.getToken()"
+                      [disabled]="!tokenService.getCredentials()"
                       (click)="showReplySection(comment.id)"
                     >
                       <fa-icon [icon]="['fas', 'message']" class="font-16-px" />
@@ -621,7 +671,7 @@
                   "
                   class="py-2 px-3 align-items-center w-100 mb-5"
                 >
-                  <div class="d-flex align-items-baseline position-relative">
+                  <div [attr.id]="'replaycomment-' + post.id" class="d-flex align-items-baseline position-relative custom-width-comment gap-sm-0 gap-2">
                     <!-- <div
                       #childPostCommentElement
                       contenteditable
@@ -629,22 +679,20 @@
                       class="outline-0 w-100 comment-input c-text"
                     ></div> -->
                     <app-tag-user-input
-                      class="replay-comment-emoji"
+                      class="comment-emoji"
                       placeholder="Reply comment"
                       [value]="replaycommentMessageInputValue"
                       [isShowMetaLoader]="true"
                       [isShowEmojis]="true"
-                      (onDataChange)="onTagUserReplayInputChangeEvent($event)"
+                      (onDataChange)="onTagUserReplayInputChangeEvent($event, post.id)"
                     />
-                    <div
-                      class="file-input d-flex gap-2 align-items-center"
-                    >
+                    <div class="file-input d-flex gap-7 gap-sm-2 align-items-center flex-column-reverse flex-sm-row">
                       <div class="file-upload d-flex">
                         <label class="file">
                           <input
                             type="file"
                             accept="image/*"
-                            (change)="onPostFileSelect($event, 'child')"
+                            (change)="onPostFileSelect($event, 'child', post.id)"
                           />
                           <span
                             class="file-custom border-0 d-grid text-center"
@@ -741,7 +789,7 @@
                                 />
 
                                 <div ngbDropdownMenu class="dropdown-menu">
-                                  <button ngbDropdownItem>
+                                  <button ngbDropdownItem *ngIf="reply.profileId == profileId">
                                     <a
                                       class="droplist d-flex align-items-center gap-2"
                                       (click)="editComment(reply)"
@@ -792,7 +840,7 @@
                           <li class="d-center">
                             <button
                               class="d-center gap-1 gap-sm-2 font-12-px"
-                              [disabled]="!tokenService.getToken()"
+                              [disabled]="!tokenService.getCredentials()"
                               (click)="
                                 reply.react == 'L'
                                   ? disLikeComments(reply)

@@ -17,7 +17,7 @@ export class AppointmentCallComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private router: Router) { }
   ngOnInit(): void {
-    const appointmentURLCall = this.route.snapshot['_routerState'].url.split('/appointment-call/')[1];
+    const appointmentURLCall = this.route.snapshot['_routerState'].url.split('/call/')[1];
     console.log(appointmentURLCall);
     this.appointmentCall = this.sanitizer.bypassSecurityTrustResourceUrl(
     'https://meet.facetime.tube/' + appointmentURLCall

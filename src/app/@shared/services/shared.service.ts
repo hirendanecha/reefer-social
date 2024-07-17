@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CustomerService } from './customer.service';
-import { ActivatedRoute } from '@angular/router';
 import { CommunityService } from './community.service';
 import { PostService } from './post.service';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +15,20 @@ export class SharedService {
   userData: any = {};
   notificationList: any = [];
   isNotify = false;
-  advertizementLink: any = []
+  linkMetaData: {};
+  advertizementLink: any = [];
+  onlineUserList: any = [];
+
+  private isRoomCreatedSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
 
   constructor(
     public modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private customerService: CustomerService,
-    private route: ActivatedRoute,
     private communityService: CommunityService,
     private postService: PostService,
-
+    private route: ActivatedRoute
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
@@ -63,10 +68,10 @@ export class SharedService {
   getUserDetails() {
     const profileId = localStorage.getItem('profileId');
     if (profileId) {
-      // const localUserData = JSON.parse(localStorage.getItem('userData'));
-      // if (localUserData?.Id) {
-      //   this.userData = localUserData;
-      // }
+      const localUserData = JSON.parse(localStorage.getItem('userData'));
+      if (localUserData?.ID) {
+        this.userData = localUserData;
+      }
 
       this.spinner.show();
 
@@ -101,7 +106,10 @@ export class SharedService {
     this.customerService.getNotificationList(Number(id), data).subscribe({
       next: (res: any) => {
         this.isNotify = false;
-        this.notificationList = res?.data;
+        this.notificationList = res.data.filter((ele) => {
+          ele.notificationToProfileId === id;
+          return ele;
+        });
       },
       error: (error) => {
         console.log(error);
@@ -112,19 +120,23 @@ export class SharedService {
   getAdvertizeMentLink(id): void {
     if (id) {
       this.communityService.getLinkById(id).subscribe({
-        next: ((res: any) => {
+        next: (res: any) => {
           if (res.data) {
-            console.log(res.data)
             if (res.data[0]?.link1 || res.data[0]?.link2) {
-              this.getMetaDataFromUrlStr(res.data[0]?.link1);
-              this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              this.advertizementLink = [];
+              if (res.data[0]?.link1) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link1);
+              }
+              if (res.data[0]?.link2) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              }
             }
           }
-        }),
+        },
         error: (err) => {
           console.log(err);
-        }
-      })
+        },
+      });
     } else {
       this.advertizementLink = null;
     }
@@ -133,22 +145,30 @@ export class SharedService {
   getMetaDataFromUrlStr(url): void {
     this.postService.getMetaData({ url }).subscribe({
       next: (res: any) => {
-        if (res?.meta?.image) {
-          const urls = res.meta?.image?.url;
-          const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-          const linkMetaData = {
-            title: res?.meta?.title,
-            metadescription: res?.meta?.description,
-            metaimage: imgUrl,
-            metalink: res?.meta?.url || url,
-            url: url,
-          };
-          this.advertizementLink?.push(linkMetaData);
-        }
+        const meta = res?.meta;
+        const urls = meta?.image?.url;
+        const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+        const linkMetaData = {
+          title: meta?.title,
+          metadescription: meta?.description,
+          metaimage: imgUrl,
+          metalink: meta?.url || url,
+          url: url,
+        };
+        this.advertizementLink?.push(linkMetaData);
       },
       error: (err) => {
         console.log(err);
       },
     });
+  }
+
+  updateIsRoomCreated(value: boolean): void {
+    this.isRoomCreatedSubject.next(value);
+  }
+
+  // Method to get an Observable that emits isRoomCreated changes
+  getIsRoomCreatedObservable(): Observable<boolean> {
+    return this.isRoomCreatedSubject.asObservable();
   }
 }
