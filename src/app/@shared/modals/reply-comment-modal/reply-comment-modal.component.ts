@@ -19,7 +19,8 @@ export class ReplyCommentModalComponent implements AfterViewInit {
   commentData: any = {
     file: null,
     url: '',
-    tags: []
+    tags: [],
+    meta: {},
   };
 
   commentMessageInputValue: string = ''
@@ -32,7 +33,7 @@ export class ReplyCommentModalComponent implements AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
   }
-
+  
   ngAfterViewInit(): void {
     if (this.data) {
 
@@ -55,7 +56,8 @@ export class ReplyCommentModalComponent implements AfterViewInit {
     const file = event.target?.files?.[0] || {};
     if (file.type.includes('image/')) {
       this.commentData['file'] = file;
-      this.selectedImage = URL.createObjectURL(file);    }
+      this.selectedImage = URL.createObjectURL(file);
+    }
     else {
       this.toastService.danger(`sorry ${file.type} are not allowed!`)
     }
@@ -68,21 +70,18 @@ export class ReplyCommentModalComponent implements AfterViewInit {
   removePostSelectedFile(): void {
     this.commentData['file'] = null;
     this.commentData['imageUrl'] = '';
-    this.selectedImage = ''
+    this.selectedImage = '';
   }
-
 
   onChangeComment(): void {
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
-    console.log(this.commentData.tags)
     this.activeModal.close(this.commentData);
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // console.log('comments-data', data)
-    // this.commentData.comment = data?.html;
-    this.extractLargeImageFromContent(data.html);
+    this.extractLargeImageFromContent(data.html)
     this.commentMessageTags = data?.tags;
+    this.commentData.meta = data?.meta;
   }
 
   extractLargeImageFromContent(content: string): void {
